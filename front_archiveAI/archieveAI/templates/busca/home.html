@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat com IA</title>
+    <style>
+        body { font-family: sans-serif; margin: 2rem; }
+        #chat-container { max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 1rem; border-radius: 8px; }
+        #chat-form { display: flex; margin-top: 1rem; }
+        #query-input { flex-grow: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+        #chat-submit { padding: 0.5rem 1rem; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; }
+        #chat-output { min-height: 100px; padding: 0.5rem; border: 1px solid #eee; margin-top: 1rem; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div id="chat-container">
+    <h1>Chat com IA</h1>
+    <div id="chat-output">Aguardando sua pergunta...</div>
+
+    <form id="chat-form" method="post">
+      {% csrf_token %}  <input type="text" id="query-input" placeholder="Digite sua pergunta..." required>
+      <button type="submit" id="chat-submit">Enviar</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('chat-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const queryInput = document.getElementById('query-input');
+        const query = queryInput.value;
+        const outputDiv = document.getElementById('chat-output');
+
+        outputDiv.innerHTML = 'Aguarde... a IA está pensando...';
+
+        try {
+            const response = await fetch('/resposta/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ pergunta: query }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro na resposta da API.');
+            }
+
+            const data = await response.json();
+            outputDiv.innerHTML = `**Resposta:** ${data.resposta}<br><br> (Fonte: ${data.source})`;
+        } catch (error) {
+            outputDiv.innerHTML = `Ocorreu um erro: ${error.message}`;
+        }
+    });
+</script>
+</form>
+</body>
+</html>
