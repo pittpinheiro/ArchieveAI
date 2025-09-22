@@ -1,0 +1,23 @@
+
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL= postgresql://neondb_owner:npg_rsfi06vSZhGo@ep-sweet-meadow-aczt62r8-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+      - OPENAI_API_KEY= "AIzaSyAOMQhoz5v2at-J4GdRpyBvAdPJJHqq09Q" 
+    depends_on:
+      - sqlchat
+
+  sqlchat:
+    image: "sqlchat/sqlchat" 
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://neondb_owner:npg_rsfi06vSZhGo@ep-sweet-meadow-aczt62r8-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+      - OPENAI_API_KEY= "AIzaSyAOMQhoz5v2at-J4GdRpyBvAdPJJHqq09Q"

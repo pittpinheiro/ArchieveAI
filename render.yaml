@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: archieve-ai
+    runtime: docker
+    plan: free # Você pode escolher um plano pago se precisar de mais recursos
+    envVars:
+      - key: DATABASE_URL
+        value: 'postgresql://neondb_owner:npg_rsfi06vSZhGo@ep-sweet-meadow-aczt62r8-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+      - key: OPENAI_API_KEY
+        value: 'AIzaSyA--x5p6N-6y33MJTfOVK57Vp6BqulmWdI'
+    buildCommand: "npm run build"
+    startCommand: "npm run start"
